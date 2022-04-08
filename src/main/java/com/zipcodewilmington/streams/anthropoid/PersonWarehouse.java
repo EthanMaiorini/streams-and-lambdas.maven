@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -36,7 +37,9 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return list of names of Person objects
      */ // TODO
     public List<String> getNames() {
-        return null;
+        List<String> names = new ArrayList<>();
+        people.forEach(person->names.add(person.getName()));
+        return names;
     }
 
 
@@ -44,7 +47,12 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return list of uniquely named Person objects
      */ //TODO
     public Stream<Person> getUniquelyNamedPeople() {
-        return null;
+        List<Person> distinctP = new ArrayList<>();
+        List<String> distinctNames = getNames();
+        List<String> names = distinctNames.stream().distinct().collect(
+                Collectors.toList());
+        distinctP =
+        return distinctP.stream();
     }
 
 
