@@ -4,10 +4,7 @@ import com.zipcodewilmington.streams.tools.ReflectionUtils;
 import com.zipcodewilmington.streams.tools.logging.LoggerHandler;
 import com.zipcodewilmington.streams.tools.logging.LoggerWarehouse;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -47,12 +44,8 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return list of uniquely named Person objects
      */ //TODO
     public Stream<Person> getUniquelyNamedPeople() {
-        List<Person> distinctP = new ArrayList<>();
-        List<String> distinctNames = getNames();
-        List<String> names = distinctNames.stream().distinct().collect(
-                Collectors.toList());
-        distinctP =
-        return distinctP.stream();
+        Set<String> distinctP = new HashSet<>(people.size());
+        return people.stream().filter(p->distinctP.add(p.getName()));
     }
 
 
@@ -61,7 +54,7 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return a Stream of respective
      */ //TODO
     public Stream<Person> getUniquelyNamedPeopleStartingWith(Character character) {
-        return null;
+        return getUniquelyNamedPeople().filter((Person p)->p.getName().charAt(0) == character);
     }
 
     /**
@@ -69,14 +62,17 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return a Stream of respective
      */ //TODO
     public Stream<Person> getFirstNUniquelyNamedPeople(int n) {
-        return null;
+        return getUniquelyNamedPeople().limit(n);
     }
 
     /**
      * @return a mapping of Person Id to the respective Person name
      */ // TODO
     public Map<Long, String> getIdToNameMap() {
-        return null;
+        Map<Long,String> map = new HashMap<>();
+        IntStream.range(0, people.size()).forEach(index->{Person person = people.get(index);
+                    map.put(person.getPersonalId(),person.getName());});
+        return map;
     }
 
 
