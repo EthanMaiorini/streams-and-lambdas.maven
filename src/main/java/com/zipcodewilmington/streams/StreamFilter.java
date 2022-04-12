@@ -2,6 +2,7 @@ package com.zipcodewilmington.streams;
 
 import com.zipcodewilmington.streams.anthropoid.Person;
 import com.zipcodewilmington.streams.anthropoid.PersonFactory;
+import com.zipcodewilmington.streams.anthropoid.PersonWarehouse;
 import com.zipcodewilmington.streams.tools.RandomUtils;
 import com.zipcodewilmington.streams.tools.StringUtils;
 
@@ -20,7 +21,12 @@ public class StreamFilter {
      * No arg constructor
      */ //TODO - construct person stream of 100 person objects; startingCharacter is a random capital letter
     public StreamFilter() {
-        this(Stream.empty(), null);
+        PersonFactory people = new PersonFactory();
+        Stream<Person> everyone = people.createPersonStream(2000);
+        Character randomChar = (char)((int)'A'+Math.random()*((int)'Z'-(int)'A'+1));
+        everyone = everyone.filter((Person p)->p.getName().charAt(0) == randomChar);
+        this.personStream = everyone.limit(100);
+        this.startingCharacter = randomChar.toString();
     }
 
     /**
@@ -28,7 +34,9 @@ public class StreamFilter {
      * @param startingCharacter - character to filter by
      */ //TODO
     public StreamFilter(Person[] people, Character startingCharacter) {
-        this(Stream.empty(), null);
+        this.personStream = Stream.of(people).filter((Person p)->p.getName().charAt(0) == startingCharacter);
+        this.startingCharacter = startingCharacter.toString();
+
     }
 
     /**
@@ -36,7 +44,7 @@ public class StreamFilter {
      * @param startingCharacter - character to filter by
      */ //TODO
     public StreamFilter(List<Person> people, Character startingCharacter) {
-        this(Stream.empty(), null);
+        this(people.toArray(new Person[people.size()]),startingCharacter);
     }
 
 
@@ -45,8 +53,8 @@ public class StreamFilter {
      * @param startingCharacter - character to filter by
      */ // I took care of the easy constructor (͡° ͜ʖ ͡°)
     public StreamFilter(Stream<Person> people, Character startingCharacter) {
-        this.personStream = people;
-        this.startingCharacter = startingCharacter.toString();
+        this((Person[]) people.toArray(),startingCharacter);
+        //this.startingCharacter = startingCharacter.toString();
     }
 
 
